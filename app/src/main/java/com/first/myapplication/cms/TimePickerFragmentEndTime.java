@@ -19,7 +19,7 @@ public class TimePickerFragmentEndTime extends DialogFragment implements TimePic
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        return new TimePickerDialog(getActivity(), this, hour, minute,
+        return new TimePickerDialog(getActivity(), R.style.TimePickerTheme, this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
     }
 

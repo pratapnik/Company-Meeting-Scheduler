@@ -56,16 +56,14 @@ public class scheduleActivity extends AppCompatActivity{
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(scheduleActivity.this,MainActivity.class);
-                startActivity(i);
+                scheduleActivity.super.onBackPressed();
             }
         });
 
         backImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent in = new Intent(scheduleActivity.this,MainActivity.class);
-                startActivity(in);
+                scheduleActivity.super.onBackPressed();
             }
         });
 
@@ -83,6 +81,7 @@ public class scheduleActivity extends AppCompatActivity{
 
                       DialogFragment newFragment = new TimePickerFragment();
                       newFragment.show(getSupportFragmentManager(), "timePicker");
+
 
               }
           });
