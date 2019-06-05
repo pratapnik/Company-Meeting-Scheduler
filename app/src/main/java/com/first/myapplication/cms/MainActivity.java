@@ -281,5 +281,5 @@ public class MainActivity extends AppCompatActivity {
         formattedDate = fdate;
         URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date="+formattedDate;
     }
-    
+
 }

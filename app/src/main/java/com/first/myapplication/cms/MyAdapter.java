@@ -31,7 +31,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
                   ListItem listItem = listItems.get(i);
                   viewHolder.textViewTime.setText(listItem.getTime() + " - " + listItem.getEndtime());
-                 // viewHolder.textViewEndTime.setText(listItem.getEndtime());
+                  viewHolder.textViewEndTime.setText(listItem.getEndtime());
                   viewHolder.textViewDesc.setText(listItem.getDesc());
 
     }

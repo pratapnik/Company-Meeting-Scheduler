@@ -13,6 +13,8 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="70dp"
+            android:layout_alignTop="@+id/schedule"
             android:layout_alignParentTop="true">
 
         </android.support.v7.widget.RecyclerView>
@@ -24,8 +26,9 @@
         android:id="@+id/schedule"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_centerInParent="true"
         android:background="@drawable/mybutton"
         android:gravity="center"
