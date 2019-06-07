@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Meeting</string>
-   
-    
+
+
     <string-array name="start_time">
         <item>Start Time</item>
         <item>9:00</item>

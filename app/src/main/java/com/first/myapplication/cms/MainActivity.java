@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +72,9 @@ public class MainActivity extends AppCompatActivity {
     //swipe to refresh
     SwipeRefreshLayout swipeRefreshLayout;
 
+    //floating  action button
+    FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,17 @@ public class MainActivity extends AppCompatActivity {
         helper = new MyHelper(this);
         database = helper.getWritableDatabase();
         values  = new ContentValues();
+
+        //floating action button
+        fab = findViewById(R.id.fab);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(i);
+            }
+        });
 
 
         //recycler view
@@ -253,11 +268,26 @@ public class MainActivity extends AppCompatActivity {
 
     public void schedule(View v){
 
-
+        Calendar calendar = Calendar.getInstance();
+        Date date = new Date(calendar.getTimeInMillis());
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        String cc= df.format(date);
+        String[] hourMin= fdate.split("-");
+        String[] hourMin2 = cc.split("-");
+        int day = Integer.parseInt(hourMin[0]);
+        int month = Integer.parseInt(hourMin[1]);
+        int day2 = Integer.parseInt(hourMin2[0]);
+        int month2 = Integer.parseInt(hourMin2[1]);
 
         Intent i = new Intent(getApplicationContext(), scheduleActivity.class);
-        i.putExtra("topdate",fdate);
-        startActivityForResult(i,REQUEST_CODE_1);
+        if(day < day2 && month<=month2 ){
+            Toast.makeText(getApplicationContext(), "Past date not allowed", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            i.putExtra("topdate",fdate);
+            startActivityForResult(i,REQUEST_CODE_1);
+        }
+
 
     }
 
