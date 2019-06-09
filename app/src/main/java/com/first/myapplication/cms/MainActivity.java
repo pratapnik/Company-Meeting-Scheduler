@@ -108,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(i);
+                i.putExtra("topdate",fdate);
+                startActivityForResult(i,REQUEST_CODE_1);
             }
         });
 
@@ -214,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
                                 Double strt = hour + 0.01*mins;
                                 Double endt = hour2 + 0.01*mins2;
-                                Cursor cursor = database.rawQuery("SELECT * FROM MEETINGS WHERE DATE=?", new String[]{formattedDate});
-//                                int x = cursor.getCount();
+
                                 Date cd = new Date(cal.getTimeInMillis());
 
                                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");

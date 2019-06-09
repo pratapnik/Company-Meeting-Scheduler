@@ -33,6 +33,7 @@ public class scheduleActivity extends AppCompatActivity{
     Button submit;
     ImageView backImage;
     TextView back;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,10 +69,14 @@ public class scheduleActivity extends AppCompatActivity{
         });
 
         //DATE
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         message = intent.getStringExtra("topdate");
         date.setText(message);
 
+
+        //checkboxes
+        bundle = getIntent().getExtras();
+        Toast.makeText(getApplicationContext(), bundle.getString("sunday"), Toast.LENGTH_SHORT).show();
 
 
         //START TIME & END TIME
@@ -140,22 +145,44 @@ public class scheduleActivity extends AppCompatActivity{
                 String st = start_time.getText().toString();
                 String et = end_time.getText().toString();
 
+                String[] hourMin= st.split(":");
+                String[] hourMin2 = et.split(":");
+                int hour = Integer.parseInt(hourMin[0]);
+                int mins = Integer.parseInt(hourMin[1]);
+                int hour2 = Integer.parseInt(hourMin2[0]);
+                int mins2 = Integer.parseInt(hourMin2[1]);
+
+                Double strt = hour + 0.01*mins;
+                Double endt = hour2 + 0.01*mins2;
+
+                Intent i = getIntent();
+                double interval = i.getDoubleExtra("interval", 0.00);
+                double diff = endt - strt;
+
+
+                if(diff >= 1){
+                    diff = diff * 60;
+                }
+                else if(hour == hour2 && diff == 0.30){
+                        diff = diff * 100;
+                }
+                else if(hour < hour2 && diff == 0.70){
+                    diff = 100 - diff * 100;
+                }
+
+
+
                 if(et.equals("End Time") || st.equals("Start Time")){
                     Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
 
 
                 }
 
-                else{
-                    String[] hourMin= st.split(":");
-                    String[] hourMin2 = et.split(":");
-                    int hour = Integer.parseInt(hourMin[0]);
-                    int mins = Integer.parseInt(hourMin[1]);
-                    int hour2 = Integer.parseInt(hourMin2[0]);
-                    int mins2 = Integer.parseInt(hourMin2[1]);
+                else if(diff != interval){
+                    Toast.makeText(getApplicationContext(), "Slot interval should be "+interval+" minutes", Toast.LENGTH_SHORT).show();
 
-                    Double strt = hour + 0.01*mins;
-                    Double endt = hour2 + 0.01*mins2;
+                }
+                else{
 
                     int flag=1;
 

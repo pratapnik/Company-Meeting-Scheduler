@@ -1,21 +1,32 @@
 package com.first.myapplication.cms;
 
+import android.content.Intent;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    TextView back;
+    TextView back, starttime, endtime;
     ImageView backImage;
 
+    String message;
     Switch thirty, sixty;
+    private final static int REQUEST_CODE_1 = 1;
+    private static double interval;
 
+    CheckBox monday, tuesday, wednesday, thursday, friday, saturday, sunday;
+
+    Button apply;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +41,20 @@ public class SettingsActivity extends AppCompatActivity {
 
         thirty = findViewById(R.id.thirty);
         sixty = findViewById(R.id.sixty);
+
+        starttime = findViewById(R.id.start_time);
+        endtime = findViewById(R.id.end_time);
+
+        apply = findViewById(R.id.apply);
+
+        monday = findViewById(R.id.monday);
+        tuesday = findViewById(R.id.tuesday);
+        wednesday = findViewById(R.id.wednesday);
+        thursday = findViewById(R.id.thursday);
+        friday = findViewById(R.id.friday);
+        saturday = findViewById(R.id.saturday);
+        sunday = findViewById(R.id.sunday);
+
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -46,12 +71,12 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
-
         thirty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     sixty.setChecked(false);
+                    interval = 30.00;
                 }
             }
         });
@@ -61,7 +86,66 @@ public class SettingsActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
                     thirty.setChecked(false);
+                    interval = 60.00;
                 }
+            }
+        });
+
+        //START TIME & END TIME
+        starttime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogFragment newFragment = new TimePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "timePicker");
+
+
+            }
+        });
+        endtime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DialogFragment newFragment = new TimePickerFragmentEndTime();
+                newFragment.show(getSupportFragmentManager(), "timePicker");
+
+            }
+        });
+
+        Intent intent = getIntent();
+        message = intent.getStringExtra("topdate");
+
+        apply.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SettingsActivity.this, scheduleActivity.class);
+
+                Bundle bundle = new Bundle();
+                if(monday.isChecked()){
+                      bundle.putString("monday", "Monday");
+                }
+                if(tuesday.isChecked()){
+                    bundle.putString("tuesday", "Tuesday");
+                }
+                if(wednesday.isChecked()){
+                    bundle.putString("wednesday", "Wednesday");
+                }
+                if(thursday.isChecked()){
+                    bundle.putString("thursday", "Thursday");
+                }
+                if(friday.isChecked()){
+                    bundle.putString("friday", "Friday");
+                }
+                if(saturday.isChecked()){
+                    bundle.putString("saturday", "Saturday");
+                }
+                if(sunday.isChecked()){
+                    bundle.putString("sunday", "Sunday");
+                }
+                i.putExtras(bundle);
+                i.putExtra("topdate", message);
+                i.putExtra("interval", interval);
+                startActivityForResult(i, REQUEST_CODE_1);
             }
         });
     }
