@@ -172,6 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
                 i.putExtra("day",dayOfWeek);
                 i.putExtra("start", starttime.getText().toString());
                 i.putExtra("end",endtime.getText().toString());
+                i.putExtra("settings", "settings");
                 startActivityForResult(i, REQUEST_CODE_1);
             }
         });
