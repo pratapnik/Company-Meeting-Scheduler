@@ -29,11 +29,12 @@ public class scheduleActivity extends AppCompatActivity{
     SQLiteDatabase database;
     ContentValues values;
     MyHelper helper;
-    String message;
+    String message, dayOfWeek;
     Button submit;
     ImageView backImage;
     TextView back;
     Bundle bundle;
+    String[] days;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,12 +72,22 @@ public class scheduleActivity extends AppCompatActivity{
         //DATE
         final Intent intent = getIntent();
         message = intent.getStringExtra("topdate");
+        dayOfWeek = intent.getStringExtra("day");
         date.setText(message);
 
 
         //checkboxes
+        days = new String[7];
         bundle = getIntent().getExtras();
         Toast.makeText(getApplicationContext(), bundle.getString("sunday"), Toast.LENGTH_SHORT).show();
+        days[0] =  bundle.getString("monday");
+        days[1] =  bundle.getString("tuesday");
+        days[2] =  bundle.getString("wednesday");
+        days[3] =  bundle.getString("thursday");
+        days[4] =  bundle.getString("friday");
+        days[5] =  bundle.getString("saturday");
+        days[6] =  bundle.getString("sunday");
+
 
 
         //START TIME & END TIME
@@ -160,69 +171,81 @@ public class scheduleActivity extends AppCompatActivity{
                 double diff = endt - strt;
 
 
-                if(diff >= 1){
-                    diff = diff * 60;
+//                if(diff >= 1){
+//                    diff = diff * 60;
+//                }
+//                else if(hour == hour2 && diff == 0.30){
+//                        diff = diff * 100;
+//                }
+//                else if(hour < hour2 && diff == 0.70){
+//                    diff = 100 - diff * 100;
+//                }
+                int k=0;
+                for(int j=0;j<7;j++){
+                    if(days[j].equals(dayOfWeek)){
+                        k=1;
+                        break;
+                    }
                 }
-                else if(hour == hour2 && diff == 0.30){
-                        diff = diff * 100;
-                }
-                else if(hour < hour2 && diff == 0.70){
-                    diff = 100 - diff * 100;
+
+                if(k==0){
+                    Toast.makeText(getApplicationContext(), "Date should be from working days", Toast.LENGTH_SHORT).show();
                 }
 
-
-
-                if(et.equals("End Time") || st.equals("Start Time")){
-                    Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
-
-
-                }
-
-                else if(diff != interval){
-                    Toast.makeText(getApplicationContext(), "Slot interval should be "+interval+" minutes", Toast.LENGTH_SHORT).show();
-
-                }
                 else{
+                    if(et.equals("End Time") || st.equals("Start Time")){
+                        Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
 
-                    int flag=1;
 
-                    if(cursor.moveToFirst()){
-                        do{
-                            // String date = c.getString(1);
-
-                            Double start = cursor.getDouble(2);
-                            Double end = cursor.getDouble(3);
-
-                            if((start <= strt && strt <= end )|| (start <= endt && endt <= end )){
-                                flag =0;
-                                break;
-                            }
-                            else if(strt<= start && endt>=end){
-                                flag =0;
-                                break;
-                            }
-                            else{
-                                flag =1;
-                            }
-                        }while(cursor.moveToNext());
                     }
 
+//                else if(diff != interval){
+//                    Toast.makeText(getApplicationContext(), "Slot interval should be "+interval+" minutes", Toast.LENGTH_SHORT).show();
+//
+//                }
+                    else{
 
-                    if(flag==1){
-                        values.put("DATE", message);
-                        values.put("START", strt);
-                        values.put("ENDTIME", endt);
-                        values.put("DESCRIPTION", desc.getText().toString());
+                        int flag=1;
+
+                        if(cursor.moveToFirst()){
+                            do{
+                                // String date = c.getString(1);
+
+                                Double start = cursor.getDouble(2);
+                                Double end = cursor.getDouble(3);
+
+                                if((start <= strt && strt <= end )|| (start <= endt && endt <= end )){
+                                    flag =0;
+                                    break;
+                                }
+                                else if(strt<= start && endt>=end){
+                                    flag =0;
+                                    break;
+                                }
+                                else{
+                                    flag =1;
+                                }
+                            }while(cursor.moveToNext());
+                        }
+
+
+                        if(flag==1){
+                            values.put("DATE", message);
+                            values.put("START", strt);
+                            values.put("ENDTIME", endt);
+                            values.put("DESCRIPTION", desc.getText().toString());
 //        values.put("PARTICIPANTS", "\"Prashant Lehri\"," +
 //                "      \"Jatin Makkar\"," +
 //                "      \"Sumit Arora\"," +
 //                "      \"Rajeev Kakkar\"");
 
-                        database.insert("MEETINGS", null, values);
-                        Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(flag==0){
-                        Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
+                            database.insert("MEETINGS", null, values);
+                            Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
+                        }
+                        else if(flag==0){
+                            Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
 
                 }

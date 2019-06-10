@@ -64,6 +64,8 @@ public class MainActivity extends AppCompatActivity {
     TextView next, prev;
     ImageView nextImage, prevImage;
 
+    String dayOfWeek;
+
     //database
     SQLiteDatabase database;
     ContentValues values;
@@ -87,7 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
 //action bar items
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+        SimpleDateFormat day = new SimpleDateFormat("EEEE");
         fdate = sdf.format(c);
+        dayOfWeek = day.format(c);
+
         topDate = findViewById(R.id.topdate);
         topDate.setText(fdate);
 
@@ -108,8 +113,26 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, SettingsActivity.class);
-                i.putExtra("topdate",fdate);
-                startActivityForResult(i,REQUEST_CODE_1);
+                Calendar calendar = Calendar.getInstance();
+                Date date = new Date(calendar.getTimeInMillis());
+                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+                String cc= df.format(date);
+                String[] hourMin= fdate.split("-");
+                String[] hourMin2 = cc.split("-");
+                int day = Integer.parseInt(hourMin[0]);
+                int month = Integer.parseInt(hourMin[1]);
+                int day2 = Integer.parseInt(hourMin2[0]);
+                int month2 = Integer.parseInt(hourMin2[1]);
+
+                if(day < day2 && month<=month2 ){
+                    Toast.makeText(getApplicationContext(), "Past date not allowed", Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    i.putExtra("topdate",fdate);
+                    i.putExtra("day", dayOfWeek);
+                    startActivityForResult(i,REQUEST_CODE_1);
+                }
+
             }
         });
 
@@ -295,6 +318,8 @@ public class MainActivity extends AppCompatActivity {
             cal.add(Calendar.DATE, -1);
             Date c = new Date(cal.getTimeInMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat day = new SimpleDateFormat("EEEE");
+        dayOfWeek = day.format(c);
         fdate = sdf.format(c);
         topDate.setText(fdate);
         formattedDate = fdate;
@@ -306,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
         cal.add(Calendar.DATE, 1);
         Date c = new Date(cal.getTimeInMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat day = new SimpleDateFormat("EEEE");
+        dayOfWeek = day.format(c);
         fdate = sdf.format(c);
         topDate.setText(fdate);
         formattedDate = fdate;

@@ -19,7 +19,7 @@ public class SettingsActivity extends AppCompatActivity {
     TextView back, starttime, endtime;
     ImageView backImage;
 
-    String message;
+    String message, dayOfWeek;
     Switch thirty, sixty;
     private final static int REQUEST_CODE_1 = 1;
     private static double interval;
@@ -114,6 +114,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         message = intent.getStringExtra("topdate");
+        dayOfWeek = intent.getStringExtra("day");
+        Toast.makeText(getApplicationContext(), dayOfWeek, Toast.LENGTH_SHORT).show();
+
 
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,27 +127,49 @@ public class SettingsActivity extends AppCompatActivity {
                 if(monday.isChecked()){
                       bundle.putString("monday", "Monday");
                 }
+                else{
+                    bundle.putString("monday", "null");
+                }
                 if(tuesday.isChecked()){
                     bundle.putString("tuesday", "Tuesday");
+                }
+                else{
+                    bundle.putString("tuesday", "null");
                 }
                 if(wednesday.isChecked()){
                     bundle.putString("wednesday", "Wednesday");
                 }
+                else{
+                    bundle.putString("wednesday", "null");
+                }
                 if(thursday.isChecked()){
                     bundle.putString("thursday", "Thursday");
+                }
+                else{
+                    bundle.putString("thursday", "null");
                 }
                 if(friday.isChecked()){
                     bundle.putString("friday", "Friday");
                 }
+                else{
+                    bundle.putString("friday", "null");
+                }
                 if(saturday.isChecked()){
                     bundle.putString("saturday", "Saturday");
+                }
+                else{
+                    bundle.putString("saturday", "null");
                 }
                 if(sunday.isChecked()){
                     bundle.putString("sunday", "Sunday");
                 }
+                else{
+                    bundle.putString("sunday", "null");
+                }
                 i.putExtras(bundle);
                 i.putExtra("topdate", message);
                 i.putExtra("interval", interval);
+                i.putExtra("day",dayOfWeek);
                 startActivityForResult(i, REQUEST_CODE_1);
             }
         });
