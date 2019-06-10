@@ -170,6 +170,8 @@ public class SettingsActivity extends AppCompatActivity {
                 i.putExtra("topdate", message);
                 i.putExtra("interval", interval);
                 i.putExtra("day",dayOfWeek);
+                i.putExtra("start", starttime.getText().toString());
+                i.putExtra("end",endtime.getText().toString());
                 startActivityForResult(i, REQUEST_CODE_1);
             }
         });

@@ -29,7 +29,7 @@ public class scheduleActivity extends AppCompatActivity{
     SQLiteDatabase database;
     ContentValues values;
     MyHelper helper;
-    String message, dayOfWeek;
+    String message, dayOfWeek, lowLimit, highLimit;
     Button submit;
     ImageView backImage;
     TextView back;
@@ -87,6 +87,9 @@ public class scheduleActivity extends AppCompatActivity{
         days[4] =  bundle.getString("friday");
         days[5] =  bundle.getString("saturday");
         days[6] =  bundle.getString("sunday");
+        Intent i = getIntent();
+        lowLimit = i.getStringExtra("start");
+        highLimit = i.getStringExtra("end");
 
 
 
@@ -152,7 +155,7 @@ public class scheduleActivity extends AppCompatActivity{
 //                    cursor.moveToFirst();
 //                }
 
-
+               //for textview start and end time
                 String st = start_time.getText().toString();
                 String et = end_time.getText().toString();
 
@@ -167,8 +170,20 @@ public class scheduleActivity extends AppCompatActivity{
                 Double endt = hour2 + 0.01*mins2;
 
                 Intent i = getIntent();
-                double interval = i.getDoubleExtra("interval", 0.00);
-                double diff = endt - strt;
+                lowLimit = i.getStringExtra("start");
+                highLimit = i.getStringExtra("end");
+
+                String[] hMin= lowLimit.split(":");
+                String[] hMin2 = highLimit.split(":");
+                int h = Integer.parseInt(hMin[0]);
+                int m = Integer.parseInt(hMin[1]);
+                int h2 = Integer.parseInt(hMin2[0]);
+                int m2 = Integer.parseInt(hMin2[1]);
+
+                Double s = h + 0.01*m;
+                Double e = h2 + 0.01*m2;
+//                double interval = i.getDoubleExtra("interval", 0.00);
+//                double diff = endt - strt;
 
 
 //                if(diff >= 1){
@@ -204,47 +219,52 @@ public class scheduleActivity extends AppCompatActivity{
 //
 //                }
                     else{
-
-                        int flag=1;
-
-                        if(cursor.moveToFirst()){
-                            do{
-                                // String date = c.getString(1);
-
-                                Double start = cursor.getDouble(2);
-                                Double end = cursor.getDouble(3);
-
-                                if((start <= strt && strt <= end )|| (start <= endt && endt <= end )){
-                                    flag =0;
-                                    break;
-                                }
-                                else if(strt<= start && endt>=end){
-                                    flag =0;
-                                    break;
-                                }
-                                else{
-                                    flag =1;
-                                }
-                            }while(cursor.moveToNext());
+                        if(strt<s || endt <s || strt > e || endt>e){
+                            Toast.makeText(getApplicationContext(), "Meeting should be between office timings", Toast.LENGTH_SHORT).show();
                         }
+                        else{
+                            int flag=1;
+
+                            if(cursor.moveToFirst()){
+                                do{
+                                    // String date = c.getString(1);
+
+                                    Double start = cursor.getDouble(2);
+                                    Double end = cursor.getDouble(3);
+
+                                    if((start <= strt && strt <= end )|| (start <= endt && endt <= end )){
+                                        flag =0;
+                                        break;
+                                    }
+                                    else if(strt<= start && endt>=end){
+                                        flag =0;
+                                        break;
+                                    }
+                                    else{
+                                        flag =1;
+                                    }
+                                }while(cursor.moveToNext());
+                            }
 
 
-                        if(flag==1){
-                            values.put("DATE", message);
-                            values.put("START", strt);
-                            values.put("ENDTIME", endt);
-                            values.put("DESCRIPTION", desc.getText().toString());
+                            if(flag==1){
+                                values.put("DATE", message);
+                                values.put("START", strt);
+                                values.put("ENDTIME", endt);
+                                values.put("DESCRIPTION", desc.getText().toString());
 //        values.put("PARTICIPANTS", "\"Prashant Lehri\"," +
 //                "      \"Jatin Makkar\"," +
 //                "      \"Sumit Arora\"," +
 //                "      \"Rajeev Kakkar\"");
 
-                            database.insert("MEETINGS", null, values);
-                            Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
+                                database.insert("MEETINGS", null, values);
+                                Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
+                            }
+                            else if(flag==0){
+                                Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else if(flag==0){
-                            Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
-                        }
+
 
                     }
 
