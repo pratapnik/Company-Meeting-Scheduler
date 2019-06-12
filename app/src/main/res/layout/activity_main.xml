@@ -8,10 +8,73 @@
     tools:context=".MainActivity">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        >
+        <ImageView
+            android:id="@+id/prevImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="0dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_chevron_left_white_24dp"
+            />
 
+        <TextView
+            android:id="@+id/prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/prevImage"
+            android:text="PREV"
+            android:textColor="#9B9B9B"
+            />
+
+
+        <TextView
+            android:id="@+id/topdate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="#4A4A4A"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+
+        <TextView
+            android:id="@+id/next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="0dp"
+            android:layout_toLeftOf="@+id/nextImage"
+            android:text="NEXT"
+            android:textColor="#9B9B9B"
+            />
+
+        <ImageView
+            android:id="@+id/nextImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/ic_chevron_right_black_24dp"
+            />
+
+
+    </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView"
+            android:layout_marginTop="56dp"
+            android:layout_marginBottom="65dp"
             android:layout_width="match_parent"
             android:layout_height="760dp"
             android:layout_alignParentTop="true">
@@ -38,19 +101,6 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        app:rippleColor="@color/colorPrimary"
-        android:src="@drawable/ic_settings_black_24dp"
-        android:layout_above="@+id/schedule"
-        android:layout_alignParentRight="true"
-        android:backgroundTint="@color/colorPrimary"
-        app:fabSize="normal"
-        android:layout_margin="16dp" />
 
 
 

@@ -32,7 +32,6 @@ public class scheduleActivity extends AppCompatActivity{
     String message, dayOfWeek, lowLimit, highLimit;
     Button submit;
     ImageView backImage;
-    TextView back;
     Bundle bundle;
     String[] days;
 
@@ -52,15 +51,8 @@ public class scheduleActivity extends AppCompatActivity{
         desc = findViewById(R.id.desc1);
         submit = findViewById(R.id.submit);
         backImage = findViewById(R.id.backImage);
-        back = findViewById(R.id.back);
 
 
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scheduleActivity.super.onBackPressed();
-            }
-        });
 
         backImage.setOnClickListener(new View.OnClickListener() {
             @Override

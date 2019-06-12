@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    TextView back, starttime, endtime;
+    TextView starttime, endtime;
     ImageView backImage;
 
     String message, dayOfWeek;
@@ -36,7 +36,6 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.settings_custom_action_bar);
 
-        back = findViewById(R.id.back);
         backImage = findViewById(R.id.backImage);
 
         thirty = findViewById(R.id.thirty);
@@ -55,14 +54,6 @@ public class SettingsActivity extends AppCompatActivity {
         saturday = findViewById(R.id.saturday);
         sunday = findViewById(R.id.sunday);
 
-
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SettingsActivity.super.onBackPressed();
-            }
-        });
 
         backImage.setOnClickListener(new View.OnClickListener() {
             @Override

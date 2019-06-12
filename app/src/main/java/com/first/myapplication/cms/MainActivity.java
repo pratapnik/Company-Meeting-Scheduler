@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,8 +75,7 @@ public class MainActivity extends AppCompatActivity {
     //swipe to refresh
     SwipeRefreshLayout swipeRefreshLayout;
 
-    //floating  action button
-    FloatingActionButton fab;
+    ImageView settings;
 
 
     @Override
@@ -107,9 +107,9 @@ public class MainActivity extends AppCompatActivity {
         values  = new ContentValues();
 
         //floating action button
-        fab = findViewById(R.id.fab);
+        settings = findViewById(R.id.settings);
 
-        fab.setOnClickListener(new View.OnClickListener() {
+        settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MainActivity.this, SettingsActivity.class);
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadRecyclerViewData(){
-        final ProgressDialog progressDialog = new ProgressDialog(this);
+        final ProgressDialog progressDialog = new ProgressDialog(this, R.style.MyAlertDialogStyle);
         progressDialog.setMessage("Loading data....");
         progressDialog.show();
 
