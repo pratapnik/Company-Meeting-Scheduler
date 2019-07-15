@@ -2,12 +2,14 @@ package com.first.myapplication.cms;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,6 +37,8 @@ public class scheduleActivity extends AppCompatActivity{
     ImageView backImage;
     Bundle bundle;
     String[] days;
+    String interval, checkInterval;
+    SharedPreferences mPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,10 @@ public class scheduleActivity extends AppCompatActivity{
 
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.schedule_custom_action_bar);
+
+        //SHARED PREFERENCES
+         mPreferences = getSharedPreferences("IDValue",0);
+
 
         date = findViewById(R.id.date);
         start_time = findViewById(R.id.start_time);
@@ -70,18 +79,19 @@ public class scheduleActivity extends AppCompatActivity{
 
         //checkboxes
         days = new String[7];
-        bundle = getIntent().getExtras();
-        Toast.makeText(getApplicationContext(), bundle.getString("sunday"), Toast.LENGTH_SHORT).show();
-        days[0] =  bundle.getString("monday");
-        days[1] =  bundle.getString("tuesday");
-        days[2] =  bundle.getString("wednesday");
-        days[3] =  bundle.getString("thursday");
-        days[4] =  bundle.getString("friday");
-        days[5] =  bundle.getString("saturday");
-        days[6] =  bundle.getString("sunday");
-        Intent i = getIntent();
-        lowLimit = i.getStringExtra("start");
-        highLimit = i.getStringExtra("end");
+        //bundle = getIntent().getExtras();
+        //Toast.makeText(getApplicationContext(), bundle.getString("sunday"), Toast.LENGTH_SHORT).show();
+        days[0] =  mPreferences.getString("monday","null");
+        days[1] =  mPreferences.getString("tuesday","null");
+        days[2] =  mPreferences.getString("wednesday","null");
+        days[3] =  mPreferences.getString("thursday","null");
+        days[4] =  mPreferences.getString("friday","null");
+        days[5] =  mPreferences.getString("saturday","null");
+        days[6] =  mPreferences.getString("sunday","null");
+        lowLimit = mPreferences.getString("start","null");
+        highLimit = mPreferences.getString("end",null);
+        interval = mPreferences.getString("interval", "null");
+        Toast.makeText(getApplicationContext(),"Interval = "+interval, Toast.LENGTH_SHORT).show();
 
 
 
@@ -167,12 +177,12 @@ public class scheduleActivity extends AppCompatActivity{
                 Double strt = hour + 0.01*mins;
                 Double endt = hour2 + 0.01*mins2;
 
-                Intent i = getIntent();
-                String set = i.getStringExtra("settings");
+
+                String set = "settings";
 
                 if(set!=null){
-                    lowLimit = i.getStringExtra("start");
-                    highLimit = i.getStringExtra("end");
+//                    lowLimit = i.getStringExtra("start");
+//                    highLimit = i.getStringExtra("end");
 
                     String[] hMin= lowLimit.split(":");
                     String[] hMin2 = highLimit.split(":");
@@ -183,19 +193,28 @@ public class scheduleActivity extends AppCompatActivity{
 
                     Double s = h + 0.01*m;
                     Double e = h2 + 0.01*m2;
-//                double interval = i.getDoubleExtra("interval", 0.00);
-//                double diff = endt - strt;
+                    int hourDiff = hour2 - hour;
+                    int minDiff = Math.abs(mins2 - mins);
+                    Log.v("strt","strt= "+strt);
+                    Log.v("endt","endt= "+endt);
+                    Log.v("start mins","mins"+mins);
+
+                    if(hourDiff==0 && minDiff == 30){
+                        checkInterval = "thirty";
+                    }
+                    else if(hourDiff!=0 && minDiff == 30){
+                        checkInterval = "thirty";
+                    }
+                    else if(hourDiff ==1 && minDiff ==0){
+                        checkInterval = "sixty";
+                    }
+                    else{
+                        checkInterval = "null";
+                    }
 
 
-//                if(diff >= 1){
-//                    diff = diff * 60;
-//                }
-//                else if(hour == hour2 && diff == 0.30){
-//                        diff = diff * 100;
-//                }
-//                else if(hour < hour2 && diff == 0.70){
-//                    diff = 100 - diff * 100;
-//                }
+
+
                     int k=0;
                     for(int j=0;j<7;j++){
                         if(days[j].equals(dayOfWeek)){
@@ -220,52 +239,54 @@ public class scheduleActivity extends AppCompatActivity{
 //
 //                }
                         else{
+
                             if(strt<s || endt <s || strt > e || endt>e){
                                 Toast.makeText(getApplicationContext(), "Meeting should be between office timings", Toast.LENGTH_SHORT).show();
                             }
-                            else{
-                                int flag=1;
+                            else {
 
-                                if(cursor.moveToFirst()){
-                                    do{
-                                        // String date = c.getString(1);
+                                if (!interval.equals(checkInterval)) {
+                                    Toast.makeText(getApplicationContext(), "Time Slot should match interval", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    int flag = 1;
 
-                                        Double start = cursor.getDouble(2);
-                                        Double end = cursor.getDouble(3);
+                                    if (cursor.moveToFirst()) {
+                                        do {
+                                            // String date = c.getString(1);
 
-                                        if((start <= strt && strt <= end )|| (start <= endt && endt <= end )){
-                                            flag =0;
-                                            break;
-                                        }
-                                        else if(strt<= start && endt>=end){
-                                            flag =0;
-                                            break;
-                                        }
-                                        else{
-                                            flag =1;
-                                        }
-                                    }while(cursor.moveToNext());
-                                }
+                                            Double start = cursor.getDouble(2);
+                                            Double end = cursor.getDouble(3);
+
+                                            if ((start <= strt && strt <= end) || (start <= endt && endt <= end)) {
+                                                flag = 0;
+                                                break;
+                                            } else if (strt <= start && endt >= end) {
+                                                flag = 0;
+                                                break;
+                                            } else {
+                                                flag = 1;
+                                            }
+                                        } while (cursor.moveToNext());
+                                    }
 
 
-                                if(flag==1){
-                                    values.put("DATE", message);
-                                    values.put("START", strt);
-                                    values.put("ENDTIME", endt);
-                                    values.put("DESCRIPTION", desc.getText().toString());
+                                    if (flag == 1) {
+                                        values.put("DATE", message);
+                                        values.put("START", strt);
+                                        values.put("ENDTIME", endt);
+                                        values.put("DESCRIPTION", desc.getText().toString());
 //        values.put("PARTICIPANTS", "\"Prashant Lehri\"," +
 //                "      \"Jatin Makkar\"," +
 //                "      \"Sumit Arora\"," +
 //                "      \"Rajeev Kakkar\"");
 
-                                    database.insert("MEETINGS", null, values);
-                                    Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
-                                }
-                                else if(flag==0){
-                                    Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
+                                        database.insert("MEETINGS", null, values);
+                                        Toast.makeText(getApplicationContext(), "Successfully Scheduled", Toast.LENGTH_SHORT).show();
+                                    } else if (flag == 0) {
+                                        Toast.makeText(getApplicationContext(), "Timing Clash", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
-
 
 
                         }

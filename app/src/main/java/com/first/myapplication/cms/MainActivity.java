@@ -308,6 +308,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else{
             i.putExtra("topdate",fdate);
+            i.putExtra("day",dayOfWeek);
             startActivityForResult(i,REQUEST_CODE_1);
         }
 
