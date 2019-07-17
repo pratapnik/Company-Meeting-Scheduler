@@ -10,7 +10,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -61,6 +63,19 @@ public class scheduleActivity extends AppCompatActivity{
         submit = findViewById(R.id.submit);
         backImage = findViewById(R.id.backImage);
 
+        desc.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    handled = true;
+                    submit.performClick();
+                }
+
+                return handled;
+            }
+        });
+
 
 
         backImage.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +125,7 @@ public class scheduleActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                DialogFragment newFragment = new TimePickerFragmentEndTime();
+                DialogFragment newFragment = new TimePickerScheduleEndTime();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
 
             }
@@ -181,8 +196,7 @@ public class scheduleActivity extends AppCompatActivity{
                 String set = "settings";
 
                 if(set!=null){
-//                    lowLimit = i.getStringExtra("start");
-//                    highLimit = i.getStringExtra("end");
+
 
                     String[] hMin= lowLimit.split(":");
                     String[] hMin2 = highLimit.split(":");

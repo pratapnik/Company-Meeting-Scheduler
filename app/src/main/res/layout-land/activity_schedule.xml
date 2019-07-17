@@ -63,21 +63,7 @@
         tools:layout_editor_absoluteY="112dp" />
 
 
-    <Button
-        android:id="@+id/submit"
-        android:layout_width="742dp"
-        android:layout_height="50dp"
-        android:background="@drawable/mybutton"
-        android:padding="12dp"
-        android:layout_below="@+id/desc1"
-        android:layout_marginTop="18dp"
-        android:layout_centerHorizontal="true"
-        android:text="SUBMIT"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-         />
+
 
     <EditText
         android:id="@+id/desc1"
@@ -95,6 +81,21 @@
         android:textStyle="bold"
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="200dp" />
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="742dp"
+        android:layout_height="50dp"
+        android:background="@drawable/mybutton"
+        android:padding="12dp"
+        android:layout_below="@+id/desc1"
+        android:layout_marginTop="18dp"
+        android:layout_centerHorizontal="true"
+        android:text="SUBMIT"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
 
 
 </RelativeLayout>

@@ -3,19 +3,14 @@ package com.first.myapplication.cms;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
 
-public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
-
-    TimePickerDialog dialog;
+public class TimePickerScheduleEndTime extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current time as the default values for the picker
@@ -24,19 +19,14 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         int minute = c.get(Calendar.MINUTE);
 
         // Create a new instance of TimePickerDialog and return it
-        dialog = new TimePickerDialog(getActivity(), R.style.TimePickerTheme, this, hour, minute,
+        return new TimePickerDialog(getActivity(), R.style.TimePickerTheme, this, hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
-        return dialog;
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
-         TextView tv = getActivity().findViewById(R.id.start_time);
-         getActivity().findViewById(R.id.end_time).performClick();
-         tv.setText(hourOfDay+":"+minute);
-
-
+        TextView tv = getActivity().findViewById(R.id.end_time);
+        getActivity().findViewById(R.id.desc1).requestFocus();
+        tv.setText(hourOfDay+":"+minute);
     }
-
-
 }
