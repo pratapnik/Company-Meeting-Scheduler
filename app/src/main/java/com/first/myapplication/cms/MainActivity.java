@@ -3,19 +3,14 @@ package com.first.myapplication.cms;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.design.widget.FloatingActionButton;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,9 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,15 +35,12 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-//    private static final String URL_DATA = "https://api.simplifiedcoding.in/course-api/movies";
     Calendar cal = Calendar.getInstance();
     Date c = new Date(cal.getTimeInMillis());
     SimpleDateFormat df = new SimpleDateFormat("dd%2FMM%2Fyyyy", Locale.ENGLISH);
-    String formattedDate= df.format(c);
-    private String URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date="+formattedDate;
+    String formattedDate = df.format(c);
+    private String URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date=" + formattedDate;
 
-   // private final String URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date=\"7/8/2015\" "+formattedDate;
-//recycler view
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
 
@@ -60,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private final static int REQUEST_CODE_1 = 1;
     String fdate;
 
-   //actionbar items
+    //actionbar items
     TextView topDate;
     TextView next, prev;
     ImageView nextImage, prevImage;
@@ -104,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         //database
         helper = new MyHelper(this);
         database = helper.getWritableDatabase();
-        values  = new ContentValues();
+        values = new ContentValues();
 
         //floating action button
         settings = findViewById(R.id.settings);
@@ -116,21 +106,20 @@ public class MainActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 Date date = new Date(calendar.getTimeInMillis());
                 SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-                String cc= df.format(date);
-                String[] hourMin= fdate.split("-");
+                String cc = df.format(date);
+                String[] hourMin = fdate.split("-");
                 String[] hourMin2 = cc.split("-");
                 int day = Integer.parseInt(hourMin[0]);
                 int month = Integer.parseInt(hourMin[1]);
                 int day2 = Integer.parseInt(hourMin2[0]);
                 int month2 = Integer.parseInt(hourMin2[1]);
 
-                if(day < day2 && month<=month2 ){
+                if (day < day2 && month <= month2) {
                     Toast.makeText(getApplicationContext(), "Past date not allowed", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    i.putExtra("topdate",fdate);
+                } else {
+                    i.putExtra("topdate", fdate);
                     i.putExtra("day", dayOfWeek);
-                    startActivityForResult(i,REQUEST_CODE_1);
+                    startActivityForResult(i, REQUEST_CODE_1);
                 }
 
             }
@@ -146,20 +135,6 @@ public class MainActivity extends AppCompatActivity {
 
         loadRecyclerViewData();
 
-
-
-        //swiperefresh
-
-//        swipeRefreshLayout = findViewById(R.id.pullToRefresh);
-//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                listItems.clear();
-//                loadRecyclerViewData();
-//                adapter.notifyDataSetChanged();
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        });
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadRecyclerViewData(){
+    private void loadRecyclerViewData() {
         final ProgressDialog progressDialog = new ProgressDialog(this, R.style.MyAlertDialogStyle);
         progressDialog.setMessage("Loading data....");
         progressDialog.show();
@@ -214,14 +189,14 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                       // Log.d("RRRRRR", "TTTTT > response > " + response);
+                        // Log.d("RRRRRR", "TTTTT > response > " + response);
                         progressDialog.dismiss();
                         try {
 
 
                             JSONArray array = new JSONArray(response);
 
-                            for(int i=0; i<array.length();i++){
+                            for (int i = 0; i < array.length(); i++) {
                                 JSONObject o = array.getJSONObject(i);
                                 ListItem item = new ListItem(
                                         o.getString("start_time"),
@@ -229,15 +204,15 @@ public class MainActivity extends AppCompatActivity {
                                         o.getString("description")
                                 );
                                 listItems.add(item);
-                                String[] hourMin= o.getString("start_time").split(":");
+                                String[] hourMin = o.getString("start_time").split(":");
                                 String[] hourMin2 = o.getString("end_time").split(":");
                                 int hour = Integer.parseInt(hourMin[0]);
                                 int mins = Integer.parseInt(hourMin[1]);
                                 int hour2 = Integer.parseInt(hourMin2[0]);
                                 int mins2 = Integer.parseInt(hourMin2[1]);
 
-                                Double strt = hour + 0.01*mins;
-                                Double endt = hour2 + 0.01*mins2;
+                                Double strt = hour + 0.01 * mins;
+                                Double endt = hour2 + 0.01 * mins2;
 
                                 Date cd = new Date(cal.getTimeInMillis());
 
@@ -249,8 +224,7 @@ public class MainActivity extends AppCompatActivity {
                                 values.put("ENDTIME", endt);
                                 values.put("DESCRIPTION", o.getString("description"));
 
-                                database.insert("MEETINGS", null,values);
-
+                                database.insert("MEETINGS", null, values);
 
 
 //                                else{
@@ -265,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(getApplicationContext(),"error error",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "error error", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -289,13 +263,13 @@ public class MainActivity extends AppCompatActivity {
 //        return super.onCreateOptionsMenu(menu);
 //    }
 
-    public void schedule(View v){
+    public void schedule(View v) {
 
         Calendar calendar = Calendar.getInstance();
         Date date = new Date(calendar.getTimeInMillis());
         SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
-        String cc= df.format(date);
-        String[] hourMin= fdate.split("-");
+        String cc = df.format(date);
+        String[] hourMin = fdate.split("-");
         String[] hourMin2 = cc.split("-");
         int day = Integer.parseInt(hourMin[0]);
         int month = Integer.parseInt(hourMin[1]);
@@ -303,32 +277,31 @@ public class MainActivity extends AppCompatActivity {
         int month2 = Integer.parseInt(hourMin2[1]);
 
         Intent i = new Intent(getApplicationContext(), scheduleActivity.class);
-        if(day < day2 && month<=month2 ){
+        if (day < day2 && month <= month2) {
             Toast.makeText(getApplicationContext(), "Past date not allowed", Toast.LENGTH_SHORT).show();
-        }
-        else{
-            i.putExtra("topdate",fdate);
-            i.putExtra("day",dayOfWeek);
-            startActivityForResult(i,REQUEST_CODE_1);
+        } else {
+            i.putExtra("topdate", fdate);
+            i.putExtra("day", dayOfWeek);
+            startActivityForResult(i, REQUEST_CODE_1);
         }
 
 
     }
 
-    private void prev(){
-            cal.add(Calendar.DATE, -1);
-            Date c = new Date(cal.getTimeInMillis());
+    private void prev() {
+        cal.add(Calendar.DATE, -1);
+        Date c = new Date(cal.getTimeInMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
         SimpleDateFormat day = new SimpleDateFormat("EEEE");
         dayOfWeek = day.format(c);
         fdate = sdf.format(c);
         topDate.setText(fdate);
         formattedDate = fdate;
-        URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date="+formattedDate;
+        URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date=" + formattedDate;
 
     }
 
-    private void next(){
+    private void next() {
         cal.add(Calendar.DATE, 1);
         Date c = new Date(cal.getTimeInMillis());
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -337,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
         fdate = sdf.format(c);
         topDate.setText(fdate);
         formattedDate = fdate;
-        URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date="+formattedDate;
+        URL_DATA = "http://fathomless-shelf-5846.herokuapp.com/api/schedule?date=" + formattedDate;
     }
 
 }
