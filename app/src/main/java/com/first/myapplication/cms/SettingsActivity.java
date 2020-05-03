@@ -1,11 +1,9 @@
 package com.first.myapplication.cms;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -28,12 +29,13 @@ public class SettingsActivity extends AppCompatActivity {
     String message, dayOfWeek;
     Switch thirty, sixty;
     private final static int REQUEST_CODE_1 = 1;
-//    private static double interval;
+    //    private static double interval;
     String interval;
     CheckBox monday, tuesday, wednesday, thursday, friday, saturday, sunday;
 
     Button apply;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +45,8 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setCustomView(R.layout.settings_custom_action_bar);
 
         //SHARED PREFERENCES
-        mPreferences = getSharedPreferences("IDValue",0);
+        mPreferences = getSharedPreferences("IDValue", 0);
         mEditor = mPreferences.edit();
-
 
         backImage = findViewById(R.id.backImage);
 
@@ -76,7 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
         thirty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     sixty.setChecked(false);
                     interval = "thirty";
                 }
@@ -86,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
         sixty.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     thirty.setChecked(false);
                     interval = "sixty";
                 }
@@ -117,68 +118,57 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         message = intent.getStringExtra("topdate");
         dayOfWeek = intent.getStringExtra("day");
-        Toast.makeText(getApplicationContext(), dayOfWeek, Toast.LENGTH_SHORT).show();
-
 
         apply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(SettingsActivity.this, MainActivity.class);
 
-//                Bundle bundle = new Bundle();
-                if(monday.isChecked()){
-//                      bundle.putString("monday", "Monday");
-                    mEditor.putString("monday","Monday");
+                if (monday.isChecked()) {
+                    mEditor.putString("monday", "Monday");
 
-                }
-                else{
+                } else {
                     mEditor.putString("monday", "null");
                 }
-                if(tuesday.isChecked()){
+                if (tuesday.isChecked()) {
                     mEditor.putString("tuesday", "Tuesday");
-                }
-                else{
+                } else {
                     mEditor.putString("tuesday", "null");
                 }
-                if(wednesday.isChecked()){
+                if (wednesday.isChecked()) {
                     mEditor.putString("wednesday", "Wednesday");
-                }
-                else{
+                } else {
                     mEditor.putString("wednesday", "null");
                 }
-                if(thursday.isChecked()){
+                if (thursday.isChecked()) {
                     mEditor.putString("thursday", "Thursday");
-                }
-                else{
+                } else {
                     mEditor.putString("thursday", "null");
                 }
-                if(friday.isChecked()){
+                if (friday.isChecked()) {
                     mEditor.putString("friday", "Friday");
-                }
-                else{
+                } else {
                     mEditor.putString("friday", "null");
                 }
-                if(saturday.isChecked()){
+                if (saturday.isChecked()) {
                     mEditor.putString("saturday", "Saturday");
-                }
-                else{
+                } else {
                     mEditor.putString("saturday", "null");
                 }
-                if(sunday.isChecked()){
+                if (sunday.isChecked()) {
                     mEditor.putString("sunday", "Sunday");
-                }
-                else{
+                } else {
                     mEditor.putString("sunday", "null");
                 }
 
                 //i.putExtra("topdate", message);
                 mEditor.putString("interval", interval);
-                mEditor.putString("day",dayOfWeek);
+                mEditor.putString("day", dayOfWeek);
                 mEditor.putString("start", starttime.getText().toString());
-                mEditor.putString("end",endtime.getText().toString());
-               // mEditor.putString("settings", "settings");
+                mEditor.putString("end", endtime.getText().toString());
+                // mEditor.putString("settings", "settings");
                 mEditor.commit();
-                String name = mPreferences.getString("start","null");
+                String name = mPreferences.getString("start", "null");
                 Log.v("Start TIme", name);
                 startActivity(i);
 

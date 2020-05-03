@@ -1,33 +1,27 @@
 package com.first.myapplication.cms;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
-public class scheduleActivity extends AppCompatActivity{
+public class scheduleActivity extends AppCompatActivity {
 
     TextView date, start_time, end_time;
     EditText desc;
@@ -42,6 +36,7 @@ public class scheduleActivity extends AppCompatActivity{
     String interval, checkInterval;
     SharedPreferences mPreferences;
 
+    @SuppressLint("WrongConstant")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +48,7 @@ public class scheduleActivity extends AppCompatActivity{
         getSupportActionBar().setCustomView(R.layout.schedule_custom_action_bar);
 
         //SHARED PREFERENCES
-         mPreferences = getSharedPreferences("IDValue",0);
+        mPreferences = getSharedPreferences("IDValue", 0);
 
 
         date = findViewById(R.id.date);
@@ -67,7 +62,7 @@ public class scheduleActivity extends AppCompatActivity{
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
-                if(actionId== EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     handled = true;
                     submit.performClick();
                 }
@@ -75,7 +70,6 @@ public class scheduleActivity extends AppCompatActivity{
                 return handled;
             }
         });
-
 
 
         backImage.setOnClickListener(new View.OnClickListener() {
@@ -94,33 +88,28 @@ public class scheduleActivity extends AppCompatActivity{
 
         //checkboxes
         days = new String[7];
-        //bundle = getIntent().getExtras();
-        //Toast.makeText(getApplicationContext(), bundle.getString("sunday"), Toast.LENGTH_SHORT).show();
-        days[0] =  mPreferences.getString("monday","null");
-        days[1] =  mPreferences.getString("tuesday","null");
-        days[2] =  mPreferences.getString("wednesday","null");
-        days[3] =  mPreferences.getString("thursday","null");
-        days[4] =  mPreferences.getString("friday","null");
-        days[5] =  mPreferences.getString("saturday","null");
-        days[6] =  mPreferences.getString("sunday","null");
-        lowLimit = mPreferences.getString("start","null");
-        highLimit = mPreferences.getString("end",null);
+        days[0] = mPreferences.getString("monday", "null");
+        days[1] = mPreferences.getString("tuesday", "null");
+        days[2] = mPreferences.getString("wednesday", "null");
+        days[3] = mPreferences.getString("thursday", "null");
+        days[4] = mPreferences.getString("friday", "null");
+        days[5] = mPreferences.getString("saturday", "null");
+        days[6] = mPreferences.getString("sunday", "null");
+        lowLimit = mPreferences.getString("start", "null");
+        highLimit = mPreferences.getString("end", null);
         interval = mPreferences.getString("interval", "null");
-        Toast.makeText(getApplicationContext(),"Interval = "+interval, Toast.LENGTH_SHORT).show();
-
-
 
         //START TIME & END TIME
         start_time.setOnClickListener(new View.OnClickListener() {
-              @Override
-              public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                      DialogFragment newFragment = new TimePickerFragment();
-                      newFragment.show(getSupportFragmentManager(), "timePicker");
+                DialogFragment newFragment = new TimePickerFragment();
+                newFragment.show(getSupportFragmentManager(), "timePicker");
 
 
-              }
-          });
+            }
+        });
         end_time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +122,7 @@ public class scheduleActivity extends AppCompatActivity{
 
         helper = new MyHelper(this);
         database = helper.getWritableDatabase();
-        values  = new ContentValues();
+        values = new ContentValues();
 
 //        values.put("DATE", message);
 //        values.put("START", 0.0);
@@ -153,8 +142,8 @@ public class scheduleActivity extends AppCompatActivity{
 //        }
 
         StringBuilder builder = new StringBuilder();
-        while(c.moveToNext()) {
-           // Toast.makeText(getApplicationContext(),"congrats",Toast.LENGTH_SHORT).show();
+        while (c.moveToNext()) {
+            // Toast.makeText(getApplicationContext(),"congrats",Toast.LENGTH_SHORT).show();
             String date = c.getString(1);
             double start = c.getDouble(2);
 //                if(date.equals(message)){
@@ -172,14 +161,14 @@ public class scheduleActivity extends AppCompatActivity{
 //                    cursor.moveToFirst();
 //                }
 
-               //for textview start and end time
+                //for textview start and end time
                 String st = start_time.getText().toString();
                 String et = end_time.getText().toString();
 
-                String[] hourMin= st.split(":");
+                String[] hourMin = st.split(":");
                 String[] hourMin2 = et.split(":");
-                if(et.equals("End Time") || st.equals("Start Time")){
-                    Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
+                if (et.equals("End Time") || st.equals("Start Time")) {
+                    Toast.makeText(getApplicationContext(), "One of the field is empty", Toast.LENGTH_SHORT).show();
                     return;
 
                 }
@@ -189,61 +178,54 @@ public class scheduleActivity extends AppCompatActivity{
                 int hour2 = Integer.parseInt(hourMin2[0]);
                 int mins2 = Integer.parseInt(hourMin2[1]);
 
-                Double strt = hour + 0.01*mins;
-                Double endt = hour2 + 0.01*mins2;
+                Double strt = hour + 0.01 * mins;
+                Double endt = hour2 + 0.01 * mins2;
 
 
                 String set = "settings";
 
-                if(set!=null){
+                if (set != null) {
 
 
-                    String[] hMin= lowLimit.split(":");
+                    String[] hMin = lowLimit.split(":");
                     String[] hMin2 = highLimit.split(":");
                     int h = Integer.parseInt(hMin[0]);
                     int m = Integer.parseInt(hMin[1]);
                     int h2 = Integer.parseInt(hMin2[0]);
                     int m2 = Integer.parseInt(hMin2[1]);
 
-                    Double s = h + 0.01*m;
-                    Double e = h2 + 0.01*m2;
+                    Double s = h + 0.01 * m;
+                    Double e = h2 + 0.01 * m2;
                     int hourDiff = hour2 - hour;
                     int minDiff = Math.abs(mins2 - mins);
-                    Log.v("strt","strt= "+strt);
-                    Log.v("endt","endt= "+endt);
-                    Log.v("start mins","mins"+mins);
+                    Log.v("strt", "strt= " + strt);
+                    Log.v("endt", "endt= " + endt);
+                    Log.v("start mins", "mins" + mins);
 
-                    if(hourDiff==0 && minDiff == 30){
+                    if (hourDiff == 0 && minDiff == 30) {
                         checkInterval = "thirty";
-                    }
-                    else if(hourDiff!=0 && minDiff == 30){
+                    } else if (hourDiff != 0 && minDiff == 30) {
                         checkInterval = "thirty";
-                    }
-                    else if(hourDiff ==1 && minDiff ==0){
+                    } else if (hourDiff == 1 && minDiff == 0) {
                         checkInterval = "sixty";
-                    }
-                    else{
+                    } else {
                         checkInterval = "null";
                     }
 
 
-
-
-                    int k=0;
-                    for(int j=0;j<7;j++){
-                        if(days[j].equals(dayOfWeek)){
-                            k=1;
+                    int k = 0;
+                    for (int j = 0; j < 7; j++) {
+                        if (days[j].equals(dayOfWeek)) {
+                            k = 1;
                             break;
                         }
                     }
 
-                    if(k==0){
+                    if (k == 0) {
                         Toast.makeText(getApplicationContext(), "Date should be from working days", Toast.LENGTH_SHORT).show();
-                    }
-
-                    else{
-                        if(et.equals("End Time") || st.equals("Start Time")){
-                            Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (et.equals("End Time") || st.equals("Start Time")) {
+                            Toast.makeText(getApplicationContext(), "One of the field is empty", Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -252,12 +234,11 @@ public class scheduleActivity extends AppCompatActivity{
 //                    Toast.makeText(getApplicationContext(), "Slot interval should be "+interval+" minutes", Toast.LENGTH_SHORT).show();
 //
 //                }
-                        else{
+                        else {
 
-                            if(strt<s || endt <s || strt > e || endt>e){
+                            if (strt < s || endt < s || strt > e || endt > e) {
                                 Toast.makeText(getApplicationContext(), "Meeting should be between office timings", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
+                            } else {
 
                                 if (!interval.equals(checkInterval)) {
                                     Toast.makeText(getApplicationContext(), "Time Slot should match interval", Toast.LENGTH_SHORT).show();
@@ -304,16 +285,14 @@ public class scheduleActivity extends AppCompatActivity{
 
 
                         }
-                                    }
-
-                }
-                else{
-                    if(et.equals("End Time") || st.equals("Start Time")){
-                        Toast.makeText(getApplicationContext(),"One of the field is empty", Toast.LENGTH_SHORT).show();
-
-
                     }
-                    else {
+
+                } else {
+                    if (et.equals("End Time") || st.equals("Start Time")) {
+                        Toast.makeText(getApplicationContext(), "One of the field is empty", Toast.LENGTH_SHORT).show();
+
+
+                    } else {
                         int flag = 1;
 
                         if (cursor.moveToFirst()) {
@@ -361,8 +340,6 @@ public class scheduleActivity extends AppCompatActivity{
 
 
     }
-
-
 
 
 }
